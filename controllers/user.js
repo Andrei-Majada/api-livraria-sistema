@@ -23,7 +23,9 @@ module.exports = {
                     city: req.body.city,
                     street: req.body.street,
                     houseNumber: req.body.houseNumber,
-                    complement: req.body.complement
+                    complemento: req.body.complemento,
+                    dataAdmissao: req.body.dataAdmissao,
+                    filial: req.body.filial
                 })
                 .then(user => res.status(201).send(user))
                 .catch(err => res.status(400).send(err));
@@ -52,5 +54,12 @@ module.exports = {
             })
             .then(book => res.status(201).send(book))
             .catch(err => res.status(400).send(err));
+    },
+
+    listBooks(req,res,next) {
+        return Book
+            .findAll({})
+                .then(book => res.status(302).send(book))
+                .catch(err => res.status(400).send(err));
     }
 }

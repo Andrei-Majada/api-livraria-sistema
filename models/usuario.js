@@ -62,7 +62,15 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
-            complement: {
+            complemento: {
+                type: DataTypes.STRING,
+                allowNull: true,
+            },
+            dataAdmissao: {
+                type: DataTypes.DATE,
+                allowNull: true,
+            },
+            filial: {
                 type: DataTypes.STRING,
                 allowNull: true,
             }
@@ -88,3 +96,40 @@ module.exports = (sequelize, DataTypes) => {
 
     return User;
 };
+/*
+{
+    "name": "Andrei Schneider Majada",
+    "email": "andreimajada@gmail.com",
+    "password": "andrei10",
+    "phoneNumber": "91473935",
+    "document": "04335193041",
+    "dateBirth": "1999-03-05",
+    "isAdmin": 1,
+    "CEP": 96075810,
+    "state": "RS",
+    "city": "Pelotas",
+    "street": "luis otavio",
+    "houseNumber": 1962,
+    "complement": null,
+    "dataAdmissao": "2019-10-10",
+    "filial": "nilopolis"
+}
+
+{
+    "id": 1,
+    "name": "Caroline de Souza Evangelista",
+    "email": "caroline@gmail.com",
+    "password": "$2b$10$IvH/iV3WqexnfRT.B/fcieOmsaWpTXMseSMDUavfgSlAI/uMAdgaC",
+    "phoneNumber": "84326265",
+    "document": "15871239757",
+    "dateBirth": "1997-12-09T00:00:00.000Z",
+    "isAdmin": 1,
+    "CEP": 96075810,
+    "state": "RS",
+    "city": "Pelotas",
+    "street": "apolo afonso",
+    "houseNumber": 2100,
+    "dataAdmissao": "2019-10-10T00:00:00.000Z",
+    "filial": "nilopolis",
+}
+*/

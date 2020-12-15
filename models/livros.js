@@ -34,3 +34,15 @@ module.exports = (sequelize, DataTypes) => {
 
     return Book;
 };
+
+/*
+{
+    "title": "Harry Potter e o Calice de fogo",
+    "autor": "JK, Rowling",
+    "preco": 56.9,
+    "linkImagem": null,
+    "quantidade": 210,
+    "editora": "so deus sabe",
+    "categoria": "Magia"
+}
+*/

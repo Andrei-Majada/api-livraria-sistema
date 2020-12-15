@@ -1,7 +1,7 @@
 {
     "username": "root",
     "password": "senha_da_nasa",
-    "database": "livrariapbd",
+    "database": "livraria",
     "host": "localhost",
     "dialect": "mysql",
     "operatorsAliases": 0

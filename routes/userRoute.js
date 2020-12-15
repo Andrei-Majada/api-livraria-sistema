@@ -1,17 +1,16 @@
 const express = require('express')
 const router = express.Router();
-const { index, createUser, createBook } = require('../controllers/user');
+const { index, createUser, createBook, listBooks } = require('../controllers/user');
 
 //routes
 module.exports = (app) => {
     app.get('/', index); //index
     app.post('/createUser', createUser); //criar conta
     app.post('/createBook', createBook); //cadastrar novo livro
+    app.get('/search', listBooks); //listar todos os livros
 
 
 // router.get('/login', login); //fazer login
-
-// router.get('/', listarLivros); //listar todos os livros
 
 // router.get('/search/:id_livro', listLivroID); //listar livro pelo id
 
