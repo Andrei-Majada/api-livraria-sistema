@@ -1,0 +1,8 @@
+{
+    "username": "root",
+    "password": "senha_da_nasa",
+    "database": "livrariapbd",
+    "host": "localhost",
+    "dialect": "mysql",
+    "operatorsAliases": 0
+}
