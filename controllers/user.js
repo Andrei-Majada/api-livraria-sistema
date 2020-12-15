@@ -1,12 +1,13 @@
  
 const User = require('../models').User;
+const Book = require('../models').Book;
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const {cpf} = require('cpf-cnpj-validator');
 const {cnpj} = require('cpf-cnpj-validator');
 
 module.exports = {
-    create(req, res) {
+    createUser(req, res, next) {
         if (cpf.isValid(req.body.document) || cnpj.isValid(req.body.document)) {
             return User
                 .create({
@@ -31,9 +32,25 @@ module.exports = {
             "error": "Invalid document"
         });
     },
-    index(req, res) {
+
+    index(req, res, next) {
         return res.status(200).json({
             "msg": "OK"
         });
     },
+
+    createBook(req,res,next) {
+        return Book
+                .create({
+                title: req.body.title,
+                autor: req.body.autor,
+                preco: req.body.preco,
+                linkImagem: req.body.linkImagem,
+                quantidade: req.body.quantidade,
+                editora: req.body.editora,
+                categoria: req.body.categoria
+            })
+            .then(book => res.status(201).send(book))
+            .catch(err => res.status(400).send(err));
+    }
 }
