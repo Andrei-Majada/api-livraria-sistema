@@ -28,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
             categoria: {
                 type: DataTypes.STRING,
                 allowNull: false,
+            },
+            disponivel: {
+                type: DataTypes.STRING,
+                allowNull: false,
             }
         },
         {});
@@ -43,6 +47,10 @@ module.exports = (sequelize, DataTypes) => {
     "linkImagem": null,
     "quantidade": 210,
     "editora": "so deus sabe",
-    "categoria": "Magia"
+    "categoria": "Magia",
+    "disponivel": 1
 }
+
+disponivel == 1 -> livro disponivel
+disponivel == 0 -> livro nao disponivel
 */

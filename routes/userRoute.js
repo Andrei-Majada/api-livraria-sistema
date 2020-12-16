@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router();
-const { index, createUser, createBook, listBooks } = require('../controllers/user');
+const { index, createUser, createBook, listBooks, listBooksTitle, listBooksCat, listBooksAutor, listBooksEdit } = require('../controllers/user');
 
 //routes
 module.exports = (app) => {
@@ -8,19 +8,12 @@ module.exports = (app) => {
     app.post('/createUser', createUser); //criar conta
     app.post('/createBook', createBook); //cadastrar novo livro
     app.get('/search', listBooks); //listar todos os livros
-
+    app.get('/searchTitle/:title', listBooksTitle); //listar livro pelo titulo
+    app.get('/searchCat/:categoria', listBooksCat); //listar livro pela categoria
+    app.get('/searchAutor/:autor', listBooksAutor); //listar livro pelo autor
+    app.get('/searchEdit/:editora', listBooksEdit); //listar livro pela editora
 
 // router.get('/login', login); //fazer login
-
-// router.get('/search/:id_livro', listLivroID); //listar livro pelo id
-
-// router.get('/search/:title', userController.get); //listar livro pelo titulo
-
-// router.get('/search/:category', userController.get); //listar livro pela categoria
-
-// router.get('/search/:autor', userController.get); //listar livro pelo autor
-
-// router.get('/search/:editor', userController.get); //listar livro pela editora
 
 // router.delete('/deleteUder/:id_user', userController.delete); //deletar usuario
 

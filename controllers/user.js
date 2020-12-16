@@ -50,16 +50,85 @@ module.exports = {
                 linkImagem: req.body.linkImagem,
                 quantidade: req.body.quantidade,
                 editora: req.body.editora,
-                categoria: req.body.categoria
+                categoria: req.body.categoria,
+                disponivel: req.body.disponivel
             })
             .then(book => res.status(201).send(book))
             .catch(err => res.status(400).send(err));
     },
 
     listBooks(req,res,next) {
+        console.log('errou');
         return Book
             .findAll({})
                 .then(book => res.status(302).send(book))
                 .catch(err => res.status(400).send(err));
+    },
+    
+    listBooksTitle(req,res) {
+        return Book.findOne({
+            where: {
+                title: req.params.title
+            }
+        })
+            .then((book) => {
+                if (book == null) {
+                    return res.status(404).send({
+                        msg: "Livro nao encontrado"
+                    });
+                }
+                return res.status(302).send(book);
+            })
+            .catch(err => res.status(400).send(err));
+    }, 
+    
+    listBooksCat(req,res,next) {
+        return Book.findAll({
+            where: {
+                categoria: req.params.categoria
+            }
+        })
+            .then((book) => {
+                if (book == null) {
+                    return res.status(404).send({
+                        msg: "Livro nao encontrado"
+                    });
+                }
+                return res.status(302).send(book);
+            })
+            .catch(err => res.status(400).send(err));
+    }, 
+    listBooksAutor(req,res,next) {
+        return Book.findAll({
+            where: {
+                autor: req.params.autor
+            }
+        })
+            .then((book) => {
+                if (book == null) {
+                    return res.status(404).send({
+                        msg: "Livro nao encontrado"
+                    });
+                }
+                return res.status(302).send(book);
+            })
+            .catch(err => res.status(400).send(err));
+    }, 
+    
+    listBooksEdit(req,res,next) {
+        return Book.findAll({
+            where: {
+                editora: req.params.editora
+            }
+        })
+            .then((book) => {
+                if (book == null) {
+                    return res.status(404).send({
+                        msg: "Livro nao encontrado"
+                    });
+                }
+                return res.status(302).send(book);
+            })
+            .catch(err => res.status(400).send(err));
     }
 }
