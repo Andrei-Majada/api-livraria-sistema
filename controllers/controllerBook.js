@@ -1,0 +1,180 @@
+const User = require('../models').User;
+const Book = require('../models').Book;
+const Sessions = require('../models').Sessions;
+const Controla = require('../models').Controla;
+// const Pedido = require('../models').Pedido;
+// const ItemPedido = require('../models').ItemPedido;
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+const {cpf} = require('cpf-cnpj-validator');
+const {cnpj} = require('cpf-cnpj-validator');
+
+module.exports = {
+    
+    createBook(req,res,next) {
+        if (req.session.admin != 1) {
+            return res.status(401).json({
+                error: "You don't have permission to access the page you're trying to access"
+            })
+        }
+        
+        return Book
+                .create({
+                title: req.body.title,
+                autor: req.body.autor,
+                preco: req.body.preco,
+                linkImagem: req.body.linkImagem,
+                quantidade: req.body.quantidade,
+                editora: req.body.editora,
+                categoria: req.body.categoria,
+                disponivel: req.body.disponivel
+            })
+            .then(book => {
+                Controla.create({
+                    id_funcionario: req.session.userId,
+                    id_livro: book.id
+                })
+                .then(controla => {
+                    res.status(201).send(book)
+
+                })
+            })
+            .catch(err => res.status(400).send(err));
+    },
+
+    listBooks(req,res,next) {
+        return Book
+            .findAll({})
+                .then(book => res.status(302).send(book))
+                .catch(err => res.status(400).send(err));
+    },
+    
+    listBooksTitle(req,res,next) {
+        return Book.findOne({
+            where: {
+                title: req.params.title
+            }
+        })
+            .then((book) => {
+                if (book == null) {
+                    return res.status(404).send({
+                        msg: "Livro nao encontrado"
+                    });
+                }
+                return res.status(302).send(book);
+            })
+            .catch(err => res.status(400).send(err));
+    }, 
+    
+    listBooksCat(req,res,next) {
+        return Book.findAll({
+            where: {
+                categoria: req.params.categoria
+            }
+        })
+            .then((book) => {
+                if (book == null) {
+                    return res.status(404).send({
+                        msg: "Livro nao encontrado"
+                    });
+                }
+                return res.status(302).send(book);
+            })
+            .catch(err => res.status(400).send(err));
+    }, 
+    listBooksAutor(req,res,next) {
+        return Book.findAll({
+            where: {
+                autor: req.params.autor
+            }
+        })
+            .then((book) => {
+                if (book == null) {
+                    return res.status(404).send({
+                        msg: "Livro nao encontrado"
+                    });
+                }
+                return res.status(302).send(book);
+            })
+            .catch(err => res.status(400).send(err));
+    }, 
+    
+    listBooksEdit(req,res,next) {
+        return Book.findAll({
+            where: {
+                editora: req.params.editora
+            }
+        })
+            .then((book) => {
+                if (book == null) {
+                    return res.status(404).send({
+                        msg: "Livro nao encontrado"
+                    });
+                }
+                return res.status(302).send(book);
+            })
+            .catch(err => res.status(400).send(err));
+    },
+
+    editBook(req,res,next) {
+        Book.findOne({
+            where: {
+                id: req.params.id_livro
+            }
+        })
+        .then(book => {
+            book.title = req.body.title;
+            book.autor = req.body.autor;
+            book.preco = req.body.preco;
+            book.linkImagem = req.body.linkImagem;
+            book.quantidade = req.body.quantidade;
+            book.editora = req.body.editora;
+            book.categoria = req.body.categoria;
+            book.disponivel = req.body.disponivel;
+            book.save();
+            res.status(200).send(book);    
+        })
+        .catch(err => res.status(400).send(err));
+    },
+
+    deleteBook(req,res,next) {
+       return Book.findOne({
+            where: {
+                id: req.params.id_livro
+            }
+        })
+        .then(book => {
+            if (book == null) {
+                return res.status(400).json({
+                    "error": "Something went wrong"
+                })
+            }
+            book.destroy();
+ 
+            return res.status(200).json({
+                "message": "book deleted"
+            })
+        })
+        .catch((err) => {
+            return res.status(400).json(err)
+        })
+    },
+
+    listIndisp(req,res,next) {
+        return Book.findAll({
+            where: {
+                disponivel: 0
+            }
+        })
+        .then((book) => {
+            if (book == null) {
+                return res.status(404).send({
+                    msg: "nenhum livro encontrado"
+                });
+            }
+            return res.status(302).send(book);
+        })
+        .catch(err => res.status(400).send(err));
+    }
+    
+}
