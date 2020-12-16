@@ -77,22 +77,18 @@ module.exports = (sequelize, DataTypes) => {
         },
         {});
 
-    // User.associate = function (models) {
-    //     User.hasMany(models.Job, {
-    //         foreignKey: 'userId',
-    //         allowNull: false,
-    //         as: 'users',
-    //     });
-    //     User.hasMany(models.Sessions, {
-    //         foreignKey: 'userId',
-    //         allowNull: false,
-    //         as: 'tokens',
-    //     });
-    // };
+    User.associate = function (models) {
+        User.hasMany(models.Sessions, {
+            foreignKey: 'userId',
+            allowNull: false,
+            as: 'tokens',
+        });
+    };
 
-    // User.prototype.validPassword = function (password) {
-    //     return bcrypt.compareSync(password, this.password);
-    // };
+    
+    User.prototype.validPassword = function (password) {
+        return bcrypt.compareSync(password, this.password);
+    };
 
     return User;
 };

@@ -1,6 +1,7 @@
  
 const User = require('../models').User;
 const Book = require('../models').Book;
+const Sessions = require('../models').Sessions;
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const {cpf} = require('cpf-cnpj-validator');
@@ -42,6 +43,12 @@ module.exports = {
     },
 
     createBook(req,res,next) {
+        if (req.session.admin != 1) {
+            return res.status(401).json({
+                error: "You don't have permission to access the page you're trying to access"
+            })
+        }
+        
         return Book
                 .create({
                 title: req.body.title,
@@ -65,7 +72,7 @@ module.exports = {
                 .catch(err => res.status(400).send(err));
     },
     
-    listBooksTitle(req,res) {
+    listBooksTitle(req,res,next) {
         return Book.findOne({
             where: {
                 title: req.params.title
@@ -130,5 +137,75 @@ module.exports = {
                 return res.status(302).send(book);
             })
             .catch(err => res.status(400).send(err));
+    },
+
+    editLivro(req,res,next) {
+        Book.findOne({
+            where: {
+                id: req.params.id_livro
+            }
+        })
+        .then(book => {
+            console.log(book)
+            book.title = req.body.title;
+            book.autor = req.body.autor;
+            book.preco = req.body.preco;
+            book.linkImagem = req.body.linkImagem;
+            book.quantidade = req.body.quantidade;
+            book.editora = req.body.editora;
+            book.categoria = req.body.categoria;
+            book.disponivel = req.body.disponivel;
+            book.save();
+            res.status(200).send(book);    
+        })
+        .catch(err => res.status(400).send(err));
+    },
+
+    login(req, res) {
+        console.log("requisição", req.body)
+        if (req.body.email && req.body.password) {
+            User.findOne({
+                where: {
+                    email: req.body.email
+                }
+            }).then(user => {
+                if (!user || !user.validPassword(req.body.password)) {
+                    return res.json({
+                        "error": "Incorrect email or password."
+                    });
+                }
+                console.log('session', user.id)
+
+                Sessions.create({
+                    token: bcrypt.hashSync(user.email + user.id + new Date().getTime().toString(), saltRounds),
+                    userId: user.id
+                })
+                    .then(session => {
+                        return res.status(200).json({token: session.token});
+                    })
+                    .catch(() => res.status(400).json({
+                        "error": "Erro ao iniciar sessão"
+                    })
+                    );
+            })
+                .catch(() => res.status(400).json({
+                        "error": "Incorrect credentials"
+                    })
+                );
+        }
+    },
+
+    logout(req, res) {
+        Sessions.destroy({
+            where: {
+                userId: req.session.userId
+            }
+        });
+
+        req.session.destroy();
+
+        return res.status(401).json({
+            message: "You have been logged out"
+        })
     }
 }
