@@ -83,6 +83,12 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             as: 'tokens',
         });
+
+        User.hasMany(models.Controla, {
+            foreignKey: 'id_funcionario',
+            allowNull: false,
+            as: 'users',
+        });
     };
 
     

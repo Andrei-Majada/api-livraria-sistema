@@ -30,12 +30,19 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
             },
             disponivel: {
-                type: DataTypes.STRING,
+                type: DataTypes.INTEGER,
                 allowNull: false,
             }
         },
         {});
 
+        Book.associate = function (models) {
+            Book.hasMany(models.Controla, {
+                foreignKey: 'id_livro',
+                allowNull: false,
+                as: 'books',
+            }); 
+        };
 
     return Book;
 };

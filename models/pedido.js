@@ -15,14 +15,14 @@ module.exports = (sequelize, DataTypes) => {
         },
         });
 
-        Pedido.associate = function (models) {
-            Pedido.belongsTo(models.User, {
-            foreignKey: 'id_cliente',
-            allowNull: false,
-            onDelete: 'CASCADE',
-            as: 'users',
-        });
-    };
+    //     Pedido.associate = function (models) {
+    //         Pedido.belongsTo(models.User, {
+    //         foreignKey: 'id_cliente',
+    //         allowNull: false,
+    //         onDelete: 'CASCADE',
+    //         as: 'users',
+    //     });
+    // };
 
     return Pedido;
 };

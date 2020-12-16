@@ -10,20 +10,20 @@ module.exports = (sequelize, DataTypes) => {
         },
     });
 
-    Controla.associate = function (models) {
-        Controla.belongsTo(models.User, {
-            foreignKey: 'id_funcionario',
-            allowNull: false,
-            onDelete: 'CASCADE',
-            as: 'users',
-        });
-        Controla.belongsTo(models.Book, {
-            foreignKey: 'id_livro',
-            allowNull: false,
-            onDelete: 'CASCADE',
-            as: 'books',
-        });
-    };
-
+        Controla.associate = function(models) {
+            Controla.belongsTo(models.User, {
+              foreignKey: 'id_funcionario',
+              allowNull: false,
+              onDelete: 'CASCADE',
+              as: 'users',
+            });
+            Controla.belongsTo(models.Book, {
+                foreignKey: 'id_livro',
+                allowNull: false,
+                onDelete: 'CASCADE',
+                as: 'books',
+            });
+        };
+        
     return Controla;
 };
