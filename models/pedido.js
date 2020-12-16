@@ -16,10 +16,11 @@ module.exports = (sequelize, DataTypes) => {
         });
 
         Pedido.associate = function (models) {
-            Pedido.hasMany(models.User, {
+            Pedido.belongsTo(models.User, {
             foreignKey: 'id_cliente',
             allowNull: false,
-            as: 'User',
+            onDelete: 'CASCADE',
+            as: 'users',
         });
     };
 

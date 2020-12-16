@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const Controla = sequelize.define('Book', {
+    const Controla = sequelize.define('Controla', {
         id_funcionario: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -15,12 +15,13 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'id_funcionario',
             allowNull: false,
             onDelete: 'CASCADE',
-            as: 'User',
+            as: 'users',
         });
-        Controla.hasMany(models.Book, {
+        Controla.belongsTo(models.Book, {
             foreignKey: 'id_livro',
             allowNull: false,
-            as: 'Book',
+            onDelete: 'CASCADE',
+            as: 'books',
         });
     };
 

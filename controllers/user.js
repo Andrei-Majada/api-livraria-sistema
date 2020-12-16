@@ -168,7 +168,8 @@ module.exports = {
                 where: {
                     email: req.body.email
                 }
-            }).then(user => {
+            }).then(function (user) {
+                console.log('usuario', user);
                 if (!user || !user.validPassword(req.body.password)) {
                     return res.json({
                         "error": "Incorrect email or password."
@@ -187,11 +188,10 @@ module.exports = {
                         "error": "Erro ao iniciar sessão"
                     })
                     );
-            })
-                .catch(() => res.status(400).json({
-                        "error": "Incorrect credentials"
-                    })
-                );
+            }).catch(() => res.status(400).json({
+                    "error": "Incorrect credentials"
+                })
+            );
         }
     },
 

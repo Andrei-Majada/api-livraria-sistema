@@ -16,17 +16,18 @@ module.exports = (sequelize, DataTypes) => {
         {});
 
         ItemPedido.associate = function (models) {
-            ItemPedido.hasMany(models.Pedido, {
-            foreignKey: 'id_pedido',
-            allowNull: false,
-            as: 'Pedido'
+            ItemPedido.belongsTo(models.Pedido, {
+                foreignKey: 'id_pedido',
+                allowNull: false,
+                onDelete: 'CASCADE',
+                as: 'pedidos'
             });
-        };
-        ItemPedido.associate = function (models) {
-            ItemPedido.hasMany(models.Book, {
-            foreignKey: 'id_livro',
-            allowNull: false,
-            as: 'Book'
+
+            ItemPedido.belongsTo(models.Book, {
+                foreignKey: 'id_livro',
+                allowNull: false,
+                onDelete: 'CASCADE',
+                as: 'books'
             });
         };
 
