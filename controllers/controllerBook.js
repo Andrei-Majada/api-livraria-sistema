@@ -1,13 +1,7 @@
-const User = require('../models').User;
 const Book = require('../models').Book;
-const Sessions = require('../models').Sessions;
 const Controla = require('../models').Controla;
-// const Pedido = require('../models').Pedido;
-// const ItemPedido = require('../models').ItemPedido;
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
-const {cpf} = require('cpf-cnpj-validator');
-const {cnpj} = require('cpf-cnpj-validator');
+const Pedido = require('../models').Pedido;
+const ItemPedido = require('../models').ItemPedido;
 
 module.exports = {
     
@@ -175,6 +169,45 @@ module.exports = {
             return res.status(302).send(book);
         })
         .catch(err => res.status(400).send(err));
-    }
+    },
+
+    adicionarAoCarrinho(req,res) {
+        return Pedido.findOne({
+            where: {
+                id_cliente: req.session.userId
+            }
+        })
+        .then(carrinho => {
+            console.log("chegou aqui", carrinho);
+            if (carrinho == null) {
+                Pedido.create({
+                    id_cliente: req.session.userId,
+                    valorTotal: 0,
+                    dataCompra: new Date()
+                })
+                .then(pedido => {
+                    console.log("chegou aqui 2", pedido);
+                    ItemPedido.create({
+                        id_livro: req.body.id_livro,
+                        id_pedido: pedido.id,
+                        quantidade: req.body.quantidade
+                    })
+                    .then(itempedido => res.status(201).send(itempedido))
+                    .catch(err => res.status(400).send({ msg: "Nao foi possivel adicionar ao carrinho!"}));
+                })
+                .catch(err => res.status(400).send(err));
+            } else {
+                console.log("chegou aqui 3");
+                ItemPedido.create({
+                    id_livro: req.body.id_livro,
+                    id_pedido: carrinho.id,
+                    quantidade: req.body.quantidade
+                })
+                .then(itempedido => res.status(201).send(itempedido))
+                .catch(err => res.status(400).send({ msg: "Nao foi possivel adicionar ao carrinho!"}));
+            }
+        })
+        .catch(err => res.status(400).send(err));
+    },
     
 }

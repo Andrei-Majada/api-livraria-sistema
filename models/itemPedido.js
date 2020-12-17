@@ -15,21 +15,21 @@ module.exports = (sequelize, DataTypes) => {
         },
         {});
 
-        ItemPedido.associate = function (models) {
-            ItemPedido.belongsTo(models.Pedido, {
-                foreignKey: 'id_pedido',
-                allowNull: false,
-                onDelete: 'CASCADE',
-                as: 'pedidos'
-            });
+        // ItemPedido.associate = function (models) {
+        //     ItemPedido.belongsTo(models.Pedido, {
+        //         foreignKey: 'id_pedido',
+        //         allowNull: false,
+        //         onDelete: 'CASCADE',
+        //         as: 'pedidos'
+        //     });
 
-            ItemPedido.belongsTo(models.Book, {
-                foreignKey: 'id_livro',
-                allowNull: false,
-                onDelete: 'CASCADE',
-                as: 'books'
-            });
-        };
+        //     ItemPedido.belongsTo(models.Book, {
+        //         foreignKey: 'id_livro',
+        //         allowNull: false,
+        //         onDelete: 'CASCADE',
+        //         as: 'item'
+        //     });
+        // };
 
     return ItemPedido;
 };

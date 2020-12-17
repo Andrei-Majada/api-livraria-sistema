@@ -41,7 +41,13 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'id_livro',
                 allowNull: false,
                 as: 'books',
-            }); 
+            });
+
+            Book.hasMany(models.ItemPedido, {
+                foreignKey: 'id_livro',
+                allowNull: false,
+                as: 'item'
+            });
         };
 
     return Book;

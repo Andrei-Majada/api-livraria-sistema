@@ -1,9 +1,5 @@
 const User = require('../models').User;
-const Book = require('../models').Book;
 const Sessions = require('../models').Sessions;
-const Controla = require('../models').Controla;
-// const Pedido = require('../models').Pedido;
-// const ItemPedido = require('../models').ItemPedido;
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const {cpf} = require('cpf-cnpj-validator');

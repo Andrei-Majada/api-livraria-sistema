@@ -1,5 +1,5 @@
 const express = require('express');
-const { createBook, listBooks, listBooksTitle, listBooksCat, listBooksAutor, listBooksEdit, editBook, deleteBook, listIndisp } = require('../controllers/controllerBook');
+const { createBook, listBooks, listBooksTitle, listBooksCat, listBooksAutor, listBooksEdit, editBook, deleteBook, listIndisp, adicionarAoCarrinho } = require('../controllers/controllerBook');
 const middlewares = require("../middlewares");
 
 //routes
@@ -13,4 +13,5 @@ module.exports = (app) => {
     app.post('/createBook', middlewares.isAuthenticated, createBook); //cadastrar novo livro
     app.put('/edit/:id_livro', middlewares.isAuthenticated, editBook); //atualizar dados dos livros.pos
     app.delete('/deleteBook/:id_livro', middlewares.isAuthenticated, deleteBook); //deletar um livro
+    app.post('/cart', middlewares.isAuthenticated, adicionarAoCarrinho); //adicionar ao carrinho
 }
