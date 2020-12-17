@@ -240,7 +240,7 @@ module.exports = {
                         pedidoFinal.save();
                     })
                 }
-                //deleteCarrinho(pedidoFinal);
+                deleteCarrinho(pedidoFinal);
                 pedidoFinal.dataCompra = new Date();
                 pedidoFinal.save();
                 res.status(200).send(`Compra no valor de ${pedidoFinal.valorTotal} realizada com sucesso`)
@@ -248,19 +248,19 @@ module.exports = {
             .catch(err => res.status(400).send(err));
         })
         .catch(err => res.status(400).send(err));
-    },
+    }
+}
 
-    deleteCarrinho(pedidoFinal) {
-        return ItemPedido.findAll({
-            where: {
-                id_pedido: pedidoFinal.id
-            }
-        }).then(carrinho => {
-            for (let i = 0; i < carrinho.length; i++) {
-                carrinho[i].destroy();
-            }
-        })
-        .catch(err => res.status(400).send(err));
-     },
-    
+function deleteCarrinho(pedidoFinal) {
+    console.log('chegnado')
+    ItemPedido.findAll({
+        where: {
+            id_pedido: pedidoFinal.id
+        }
+    }).then(carrinho => {
+        for (let i = 0; i < carrinho.length; i++) {
+            carrinho[i].destroy();
+        }
+    })
+    .catch(err => res.status(400).send(err));
 }
