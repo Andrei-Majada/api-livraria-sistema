@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
         dataCompra: {
             type: DataTypes.DATE,
             allowNull: false,
-            unique: true
         },
         });
 
@@ -21,8 +20,15 @@ module.exports = (sequelize, DataTypes) => {
     //         allowNull: false,
     //         onDelete: 'CASCADE',
     //         as: 'users',
-    //     });
-    // };
+    //         });
+
+            //     Pedido.hasMany(models.ItemPedido, {
+            //     foreignKey: 'id_pedido',
+            //     allowNull: false,
+            //     as: 'pedido'
+            //  });
+
+    //      };
 
     return Pedido;
 };

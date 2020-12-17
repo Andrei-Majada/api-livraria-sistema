@@ -1,13 +1,7 @@
-const User = require('../models').User;
 const Book = require('../models').Book;
-const Sessions = require('../models').Sessions;
 const Controla = require('../models').Controla;
-// const Pedido = require('../models').Pedido;
-// const ItemPedido = require('../models').ItemPedido;
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
-const {cpf} = require('cpf-cnpj-validator');
-const {cnpj} = require('cpf-cnpj-validator');
+const Pedido = require('../models').Pedido;
+const ItemPedido = require('../models').ItemPedido;
 
 module.exports = {
     
@@ -175,6 +169,98 @@ module.exports = {
             return res.status(302).send(book);
         })
         .catch(err => res.status(400).send(err));
-    }
+    },
+
+    adicionarAoCarrinho(req,res,next) {
+        return Pedido.findOne({
+            where: {
+                id_cliente: req.session.userId
+            }
+        })
+        .then(carrinho => {
+            console.log("chegou aqui", carrinho);
+            if (carrinho == null) {
+                Pedido.create({
+                    id_cliente: req.session.userId,
+                    valorTotal: 0,
+                    dataCompra: new Date()
+                })
+                .then(pedido => {
+                    console.log("chegou aqui 2", pedido);
+                    ItemPedido.create({
+                        id_livro: req.body.id_livro,
+                        id_pedido: pedido.id,
+                        quantidade: req.body.quantidade
+                    })
+                    .then(itempedido => res.status(201).send(itempedido))
+                    .catch(err => res.status(400).send({ msg: "Nao foi possivel adicionar ao carrinho!"}));
+                })
+                .catch(err => res.status(400).send(err));
+            } else {
+                console.log("chegou aqui 3");
+                ItemPedido.create({
+                    id_livro: req.body.id_livro,
+                    id_pedido: carrinho.id,
+                    quantidade: req.body.quantidade
+                })
+                .then(itempedido => res.status(201).send(itempedido))
+                .catch(err => res.status(400).send({ msg: "Nao foi possivel adicionar ao carrinho!"}));
+            }
+        })
+        .catch(err => res.status(400).send(err));
+    },
+    finalizarCompra(req,res) {
+        return Pedido.findOne({
+            where: {
+                id_cliente: req.session.userId
+            }
+        })
+        .then(pedidoFinal => {
+            if (pedidoFinal == null) {
+                return res.status(404).send({
+                    msg: "Você ainda não adicionou nenhum item ao carrinho!"
+                });
+            } 
     
+            ItemPedido.findAll({
+                where: {
+                    id_pedido: pedidoFinal.id
+                }
+            }).then(carrinho => {
+                let valorFinal = 0;
+
+                for (let i = 0; i < carrinho.length; i++) {
+                    Book.findOne({
+                        where: {
+                            id: carrinho[i].id_livro
+                        }
+                    }).then(livro => {
+                        valorFinal = valorFinal + (livro.preco * carrinho[i].quantidade);
+                        pedidoFinal.valorTotal = valorFinal;
+                        pedidoFinal.save();
+                    })
+                }
+                deleteCarrinho(pedidoFinal);
+                pedidoFinal.dataCompra = new Date();
+                pedidoFinal.save();
+                res.status(200).send(`Compra no valor de ${pedidoFinal.valorTotal} realizada com sucesso`)
+            })
+            .catch(err => res.status(400).send(err));
+        })
+        .catch(err => res.status(400).send(err));
+    }
+}
+
+function deleteCarrinho(pedidoFinal) {
+    console.log('chegnado')
+    ItemPedido.findAll({
+        where: {
+            id_pedido: pedidoFinal.id
+        }
+    }).then(carrinho => {
+        for (let i = 0; i < carrinho.length; i++) {
+            carrinho[i].destroy();
+        }
+    })
+    .catch(err => res.status(400).send(err));
 }
