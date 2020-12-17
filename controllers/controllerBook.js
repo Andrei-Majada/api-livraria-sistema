@@ -171,7 +171,7 @@ module.exports = {
         .catch(err => res.status(400).send(err));
     },
 
-    adicionarAoCarrinho(req,res) {
+    adicionarAoCarrinho(req,res,next) {
         return Pedido.findOne({
             where: {
                 id_cliente: req.session.userId
@@ -209,5 +209,58 @@ module.exports = {
         })
         .catch(err => res.status(400).send(err));
     },
+    finalizarCompra(req,res) {
+        return Pedido.findOne({
+            where: {
+                id_cliente: req.session.userId
+            }
+        })
+        .then(pedidoFinal => {
+            if (pedidoFinal == null) {
+                return res.status(404).send({
+                    msg: "Você ainda não adicionou nenhum item ao carrinho!"
+                });
+            } 
+    
+            ItemPedido.findAll({
+                where: {
+                    id_pedido: pedidoFinal.id
+                }
+            }).then(carrinho => {
+                let valorFinal = 0;
+
+                for (let i = 0; i < carrinho.length; i++) {
+                    Book.findOne({
+                        where: {
+                            id: carrinho[i].id_livro
+                        }
+                    }).then(livro => {
+                        valorFinal = valorFinal + (livro.preco * carrinho[i].quantidade);
+                        pedidoFinal.valorTotal = valorFinal;
+                        pedidoFinal.save();
+                    })
+                }
+                //deleteCarrinho(pedidoFinal);
+                pedidoFinal.dataCompra = new Date();
+                pedidoFinal.save();
+                res.status(200).send(`Compra no valor de ${pedidoFinal.valorTotal} realizada com sucesso`)
+            })
+            .catch(err => res.status(400).send(err));
+        })
+        .catch(err => res.status(400).send(err));
+    },
+
+    deleteCarrinho(pedidoFinal) {
+        return ItemPedido.findAll({
+            where: {
+                id_pedido: pedidoFinal.id
+            }
+        }).then(carrinho => {
+            for (let i = 0; i < carrinho.length; i++) {
+                carrinho[i].destroy();
+            }
+        })
+        .catch(err => res.status(400).send(err));
+     },
     
 }
