@@ -111,6 +111,11 @@ module.exports = {
     },
 
     editBook(req,res,next) {
+        if (req.session.admin != 1) {
+            return res.status(401).json({
+                error: "You don't have permission to access the page you're trying to access"
+            })
+        }
         Book.findOne({
             where: {
                 id: req.params.id_livro
@@ -132,7 +137,13 @@ module.exports = {
     },
 
     deleteBook(req,res,next) {
-       return Book.findOne({
+        if (req.session.admin != 1) {
+            return res.status(401).json({
+                error: "You don't have permission to access the page you're trying to access"
+            })
+        }
+
+        return Book.findOne({
             where: {
                 id: req.params.id_livro
             }
@@ -155,6 +166,12 @@ module.exports = {
     },
 
     listIndisp(req,res,next) {
+        if (req.session.admin != 1) {
+            return res.status(401).json({
+                error: "You don't have permission to access the page you're trying to access"
+            })
+        }
+        
         return Book.findAll({
             where: {
                 disponivel: 0
